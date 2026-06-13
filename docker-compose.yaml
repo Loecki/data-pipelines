@@ -9,7 +9,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     # Connection to the target Postgres DB (where ETL data lands)
-    AIRFLOW__CONNECTIONS__POSTGRES_DWD: postgresql+psycopg2://etl_user:etl_password@postgres/dwd_warehouse
+    AIRFLOW__CONNECTIONS__POSTGRES_WAREHOUSE: postgresql+psycopg2://etl_user:etl_password@postgres/warehouse
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
@@ -20,7 +20,7 @@ x-airflow-common: &airflow-common
       condition: service_healthy
 
 services:
-  # ---- Postgres: Airflow metadata DB + DWD warehouse ----
+  # ---- Postgres: Airflow metadata DB + warehouse ----
   postgres:
     image: postgres:16
     environment:

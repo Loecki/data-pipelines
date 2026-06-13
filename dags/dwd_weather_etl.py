@@ -20,7 +20,7 @@ from sqlalchemy import create_engine, text
 
 
 # ---- Config ----
-POSTGRES_CONN = "postgresql+psycopg2://etl_user:etl_password@postgres/dwd_warehouse"
+POSTGRES_CONN = "postgresql+psycopg2://etl_user:etl_password@postgres/warehouse"
 DATA_DIR = "/opt/airflow/data"
 
 # DWD station IDs: pick a few German cities

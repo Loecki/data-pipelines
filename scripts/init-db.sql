@@ -1,12 +1,12 @@
 -- Creates the target warehouse database and user
 -- This runs automatically when Postgres container starts for the first time
 
-CREATE DATABASE dwd_warehouse;
+CREATE DATABASE warehouse;
 CREATE USER etl_user WITH PASSWORD 'etl_password';
-GRANT ALL PRIVILEGES ON DATABASE dwd_warehouse TO etl_user;
+GRANT ALL PRIVILEGES ON DATABASE warehouse TO etl_user;
 
--- Connect to dwd_warehouse and create schema
-\c dwd_warehouse
+-- Connect to warehouse and create schema
+\c warehouse
 
 -- Grant schema permissions
 GRANT ALL ON SCHEMA public TO etl_user;
