@@ -16,7 +16,7 @@ import os
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 
 # ---- Config ----
@@ -147,8 +147,8 @@ def load_weather_data(**context):
 
     # Load to clean table (upsert via temp table)
     df_raw.to_sql("_temp_clean", engine, if_exists="replace", index=False)
-    with engine.connect() as conn:
-        conn.execute("""
+    with engine.begin() as conn:
+        conn.execute(text("""
             INSERT INTO clean_weather_observations
                 (station_id, timestamp, temperature_c, humidity_pct, loaded_at)
             SELECT station_id, timestamp, temperature_c, humidity_pct, loaded_at
@@ -158,9 +158,8 @@ def load_weather_data(**context):
                 temperature_c = EXCLUDED.temperature_c,
                 humidity_pct = EXCLUDED.humidity_pct,
                 loaded_at = EXCLUDED.loaded_at;
-        """)
-        conn.execute("DROP TABLE IF EXISTS _temp_clean;")
-        conn.commit()
+        """))
+        conn.execute(text("DROP TABLE IF EXISTS _temp_clean;"))
     print("Upserted to clean_weather_observations")
 
 
@@ -196,9 +195,8 @@ def build_daily_mart(**context):
             loaded_at = EXCLUDED.loaded_at;
     """
 
-    with engine.connect() as conn:
-        conn.execute(query)
-        conn.commit()
+    with engine.begin() as conn:
+        conn.execute(text(query))
     print("Daily mart rebuilt")
 
 
